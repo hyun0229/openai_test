@@ -1,12 +1,11 @@
 from datetime import datetime
-import  random
+
 import openai
 import pymysql
 
-conn = pymysql.connect(host='sudosoft-1.cpf9r06qfgdc.us-east-2.rds.amazonaws.com', user='user', password='chocho0804', db='crontab_ex1', charset='utf8') #DB open
-cur = conn.cursor() #커서
-
-openai.api_key = "[api-key]"
+openai.api_key = "api"
+conn = pymysql.connect(host='sudosoft-1.cpf9r06qfgdc.us-east-2.rds.amazonaws.com', user='user', password='chocho0804', db='loc', charset='utf8') #DB open
+cur = conn.cursor() #커서1
 
 def get_chat_response(messages):
 
@@ -19,9 +18,8 @@ def get_chat_response(messages):
     return answer
 
 
-a= ["지진","홍수","화재","산사태"]
-b=random.choice(a)+' 메뉴얼 알려줘'
-user_input = b
+
+user_input = input("USER: ")
 
 messages = [
     {"role": "system", "content": "You are a Disaster manual assistant, name is C-DGM"},
@@ -31,14 +29,12 @@ messages = [
 ]
 
 chat_response = get_chat_response(messages)
-
 now = datetime.now()
-vals = (chat_response, now)
-sql = "INSERT INTO ct_times (qst, ans) VALUES (%s, %s)"
-cur.execute(sql, vals)
+a=2
+vals = (a,chat_response)
+sql = "INSERT INTO chatting (uid, chatting_log) VALUES (%s, %s)"
+cur.execute(sql, (a,chat_response))
 conn.commit()
-
-print("C-DGM:", chat_response)
-
 cur.close()
 conn.close()
+print("C-DGM:", chat_response)
